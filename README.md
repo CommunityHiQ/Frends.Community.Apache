@@ -22,7 +22,7 @@ https://www.myget.org/F/frends-community/api/v3/index.json and in Gallery view i
 
 Converts CSV file to Parquet format using given metadata.
 Uses parquet-dotnet library for writing Parquet files
-https://github.com/elastacloud/parquet-dotnet
+https://github.com/aloneguid/parquet-dotnet
 
 ### Properties
 
