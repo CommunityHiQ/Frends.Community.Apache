@@ -38,14 +38,14 @@ namespace Frends.Community.Apache.Tests
 ;;;Tyhjä rivi 1
 4;1.1.2020;9.999;
 3;11.11.2011;1.2345;Viimeinen rivi
-");
+", System.Text.Encoding.UTF8);
             File.WriteAllText(_inputCsvFileNameQuotes, @"Id;Date;Decimal;Text
 1;01.10.2019;5.0;Testirivi 1
 1;15.04.2018;3.5;Testirivi 2 - ""pidempi teksti"" ja ääkkösiä
 ;;;Tyhjä rivi 1
 4;1.1.2020;9.999;
 3;11.11.2011;1.2345;Viimeinen rivi
-");
+", System.Text.Encoding.UTF8);
 
             File.WriteAllText(_inputCsvFileNameDecComma, @"Id;Decimal
 1;12345,6789;12345,6789;12345,6789
@@ -58,13 +58,13 @@ namespace Frends.Community.Apache.Tests
 3;31.12.2019;1.12020;Testirivi 3
 4;01.01.2020;9.999; Testirivi 4
 3;11.11.2011;1.2345;Viimeinen rivi
-");
+", System.Text.Encoding.UTF8);
 
             File.WriteAllText(_inputCsvFileNameDecDot, @"Id;Decimal
 1;12345.6789;12345.6789;12345.6789
 2;2.3;2.3;2.3
 3;4.4;4.4;4.4
-");
+", System.Text.Encoding.UTF8);
         }
 
         [TearDown]
@@ -459,7 +459,7 @@ namespace Frends.Community.Apache.Tests
             // Has to be fixed date, otherwise the MD5 hash of the final file changes every day and the unit test starts to fail
             var dateTimeToWrite = new DateTime(2000, 01, 01).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
 
-            using (StreamWriter outputFile = new StreamWriter(fileName))
+            using (StreamWriter outputFile = new StreamWriter(fileName, false, System.Text.Encoding.UTF8))
             {
                 outputFile.WriteLine("Id;Date;Decimal;Text");
                 for (int i = 0; i < rows; i++)
