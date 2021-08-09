@@ -114,8 +114,8 @@ namespace Frends.Community.Apache.Tests
             ApacheTasks.ConvertCsvToParquet(input, options, poptions, new System.Threading.CancellationToken());
 
             var hash = TestTools.MD5Hash(_outputFileName);
-            string errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '174a79f010d07309f2db75a44653b5c8'";
-            Assert.IsTrue(hash == "174a79f010d07309f2db75a44653b5c8", errMessage);
+            string errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '3d6f72d1664b6a4040d2f12457264060'";
+            Assert.IsTrue(hash == "3d6f72d1664b6a4040d2f12457264060", errMessage);
         }
 
         /// <summary>
@@ -151,8 +151,8 @@ namespace Frends.Community.Apache.Tests
             ApacheTasks.ConvertCsvToParquet(input, options, poptions, new System.Threading.CancellationToken());
 
             var hash = TestTools.MD5Hash(_outputFileName);
-            string errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '5b192ac2ff36d2e482a228d62646705a'";
-            Assert.IsTrue(hash == "5b192ac2ff36d2e482a228d62646705a", errMessage);
+            string errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: 'd5dcfc43ecd64da5f5013dab3095b777'";
+            Assert.IsTrue(hash == "d5dcfc43ecd64da5f5013dab3095b777", errMessage);
         }
 
         /// <summary>
@@ -189,8 +189,8 @@ namespace Frends.Community.Apache.Tests
             ApacheTasks.ConvertCsvToParquet(input, options, poptions, new System.Threading.CancellationToken());
 
             var hash = TestTools.MD5Hash(_outputFileName);
-            string errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: 'ab7331f16f44be02e9e75776cd56dd06'";
-            Assert.IsTrue(hash == "ab7331f16f44be02e9e75776cd56dd06", errMessage);
+            string errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '94e1bfe7bf71d94d5bd52f2de2af658b'";
+            Assert.IsTrue(hash == "94e1bfe7bf71d94d5bd52f2de2af658b", errMessage);
 
         }
 
@@ -402,8 +402,8 @@ namespace Frends.Community.Apache.Tests
             ApacheTasks.ConvertCsvToParquet(input, options, poptions, new System.Threading.CancellationToken());
 
             var hash = TestTools.MD5Hash(_outputFileName);
-            string errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '174a79f010d07309f2db75a44653b5c8'";
-            Assert.IsTrue(hash == "174a79f010d07309f2db75a44653b5c8", errMessage);
+            string errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '3d6f72d1664b6a4040d2f12457264060'";
+            Assert.IsTrue(hash == "3d6f72d1664b6a4040d2f12457264060", errMessage);
         }
 
 
@@ -442,9 +442,9 @@ namespace Frends.Community.Apache.Tests
             ApacheTasks.ConvertCsvToParquet(input, options, poptions, new System.Threading.CancellationToken());
 
             var hash = TestTools.MD5Hash(_outputFileName);
-            string errMessage = $"File checksum didn't match. Generated checksum: '{hash}' differs the expected checksum: '882a301d53216e95324cd67c31ad07a1'";
+            string errMessage = $"File checksum didn't match. Generated checksum: '{hash}' differs the expected checksum: 'd214884cf6a6596cbc69a174bdd60805'";
 
-            Assert.IsTrue(hash == "882a301d53216e95324cd67c31ad07a1", errMessage);
+            Assert.IsTrue(hash == "d214884cf6a6596cbc69a174bdd60805", errMessage);
         }
 
 

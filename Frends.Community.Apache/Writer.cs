@@ -246,6 +246,7 @@ namespace Frends.Community.Apache
         /// Parses datetime
         /// If format is given, tries parse that exact format.
         /// If date is empty, returns null.
+        /// If original value does not contain timezone info the value is assumed as universal time
         /// </summary>
         /// <param name="dtStr">Date as string</param>
         /// <param name="timeFormat">Optional exact format</param>
@@ -256,7 +257,7 @@ namespace Frends.Community.Apache
             {
                 if (!String.IsNullOrWhiteSpace(timeFormat))
                 {
-                    if (DateTimeOffset.TryParseExact(dtStr, timeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTimeOffset dt))
+                    if (DateTimeOffset.TryParseExact(dtStr, timeFormat, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTimeOffset dt))
                     {
                         return dt;
                     }
@@ -274,6 +275,7 @@ namespace Frends.Community.Apache
         /// Parses datetime
         /// If format is given, tries parse that exact format.
         /// If exact format parsing fails, throws exception.
+        /// If original value does not contain timezone info the value is assumed as universal time
         /// </summary>
         /// <param name="dtStr">Date as string</param>
         /// <param name="timeFormat">Optional exact format</param>
@@ -282,7 +284,7 @@ namespace Frends.Community.Apache
         {
             if (!String.IsNullOrWhiteSpace(timeFormat))
             {
-                if (DateTimeOffset.TryParseExact(dtStr, timeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTimeOffset dt))
+                if (DateTimeOffset.TryParseExact(dtStr, timeFormat, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTimeOffset dt))
                 {
                     return dt;
                 }

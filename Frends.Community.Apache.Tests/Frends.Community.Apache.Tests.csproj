@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
 	<LangVersion>latest</LangVersion>
     <IsPackable>false</IsPackable>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
   <ItemGroup>

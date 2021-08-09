@@ -19,7 +19,7 @@ namespace Frends.Community.Apache.Tests
 
             var hash = md5.ComputeHash(stream);
 
-            return BitConverter.ToString(hash).Replace("-", String.Empty).ToLower();
+            return BitConverter.ToString(hash).Replace("-", String.Empty).ToLower(System.Globalization.CultureInfo.InvariantCulture);
         }
 
         /// <summary>
