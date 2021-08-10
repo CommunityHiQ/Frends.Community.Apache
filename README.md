@@ -1,6 +1,6 @@
 # Frends.Community.Apache
 
-frends Community Task for Apache related operations
+Frends Community task library for Apache related operations
 
 [![Actions Status](https://github.com/CommunityHiQ/Frends.Community.Apache/workflows/PackAndPushAfterMerge/badge.svg)](https://github.com/CommunityHiQ/Frends.Community.Apache/actions) ![MyGet](https://img.shields.io/myget/frends-community/v/Frends.Community.Apache) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
 
