@@ -4,7 +4,10 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading;
 using Par = Parquet;
+using System.Runtime.InteropServices;
 
 namespace Frends.Community.Apache.Tests
 {
@@ -38,14 +41,14 @@ namespace Frends.Community.Apache.Tests
 ;;;Tyhjä rivi 1
 4;1.1.2020;9.999;
 3;11.11.2011;1.2345;Viimeinen rivi
-", System.Text.Encoding.UTF8);
+", Encoding.UTF8);
             File.WriteAllText(_inputCsvFileNameQuotes, @"Id;Date;Decimal;Text
 1;01.10.2019;5.0;Testirivi 1
 1;15.04.2018;3.5;Testirivi 2 - ""pidempi teksti"" ja ääkkösiä
 ;;;Tyhjä rivi 1
 4;1.1.2020;9.999;
 3;11.11.2011;1.2345;Viimeinen rivi
-", System.Text.Encoding.UTF8);
+", Encoding.UTF8);
 
             File.WriteAllText(_inputCsvFileNameDecComma, @"Id;Decimal
 1;12345,6789;12345,6789;12345,6789
@@ -58,13 +61,13 @@ namespace Frends.Community.Apache.Tests
 3;31.12.2019;1.12020;Testirivi 3
 4;01.01.2020;9.999; Testirivi 4
 3;11.11.2011;1.2345;Viimeinen rivi
-", System.Text.Encoding.UTF8);
+", Encoding.UTF8);
 
             File.WriteAllText(_inputCsvFileNameDecDot, @"Id;Decimal
 1;12345.6789;12345.6789;12345.6789
 2;2.3;2.3;2.3
 3;4.4;4.4;4.4
-", System.Text.Encoding.UTF8);
+", Encoding.UTF8);
         }
 
         [TearDown]
@@ -111,11 +114,19 @@ namespace Frends.Community.Apache.Tests
                 Schema = _commonSchema
             };
 
-            ApacheTasks.ConvertCsvToParquet(input, options, poptions, new System.Threading.CancellationToken());
+            ApacheTasks.ConvertCsvToParquet(input, options, poptions, new CancellationToken());
 
             var hash = TestTools.MD5Hash(_outputFileName);
-            string errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '3d6f72d1664b6a4040d2f12457264060'";
-            Assert.IsTrue(hash == "3d6f72d1664b6a4040d2f12457264060", errMessage);
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                string errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '045c6a617a1d37e0a1b464ccdeea2979'";
+                Assert.IsTrue(hash == "045c6a617a1d37e0a1b464ccdeea2979", errMessage);
+            }
+            else
+            {
+                string errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '3d6f72d1664b6a4040d2f12457264060'";
+                Assert.IsTrue(hash == "3d6f72d1664b6a4040d2f12457264060", errMessage);
+            }
         }
 
         /// <summary>
@@ -148,11 +159,19 @@ namespace Frends.Community.Apache.Tests
                 Schema = _commonSchema.Replace("?\"","\"")
             };
 
-            ApacheTasks.ConvertCsvToParquet(input, options, poptions, new System.Threading.CancellationToken());
+            ApacheTasks.ConvertCsvToParquet(input, options, poptions, new CancellationToken());
 
             var hash = TestTools.MD5Hash(_outputFileName);
-            string errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: 'd5dcfc43ecd64da5f5013dab3095b777'";
-            Assert.IsTrue(hash == "d5dcfc43ecd64da5f5013dab3095b777", errMessage);
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                string errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '6c80e7c86c8adf39b8544f7bc90724c8'";
+                Assert.IsTrue(hash == "6c80e7c86c8adf39b8544f7bc90724c8", errMessage);
+            }
+            else
+            {
+                string errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: 'd5dcfc43ecd64da5f5013dab3095b777'";
+                Assert.IsTrue(hash == "d5dcfc43ecd64da5f5013dab3095b777", errMessage);
+            }
         }
 
         /// <summary>
@@ -186,12 +205,19 @@ namespace Frends.Community.Apache.Tests
                 Schema = _commonSchema
             };
 
-            ApacheTasks.ConvertCsvToParquet(input, options, poptions, new System.Threading.CancellationToken());
+            ApacheTasks.ConvertCsvToParquet(input, options, poptions, new CancellationToken());
 
             var hash = TestTools.MD5Hash(_outputFileName);
-            string errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '94e1bfe7bf71d94d5bd52f2de2af658b'";
-            Assert.IsTrue(hash == "94e1bfe7bf71d94d5bd52f2de2af658b", errMessage);
-
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                string errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '86692194196efecc823d48384bd2a5a5'";
+                Assert.IsTrue(hash == "86692194196efecc823d48384bd2a5a5", errMessage);
+            }
+            else
+            {
+                string errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '94e1bfe7bf71d94d5bd52f2de2af658b'";
+                Assert.IsTrue(hash == "94e1bfe7bf71d94d5bd52f2de2af658b", errMessage);
+            }
         }
 
 
@@ -277,7 +303,7 @@ namespace Frends.Community.Apache.Tests
                         double?[] dou = (double?[])decimalColumn.Data;
                         return dou[0];
                     default:
-                        throw new System.Exception("Unknown nullable datatype:" + dataFields[columnIndex].DataType);
+                        throw new Exception("Unknown nullable datatype:" + dataFields[columnIndex].DataType);
                 }
             }
             else
@@ -294,7 +320,7 @@ namespace Frends.Community.Apache.Tests
                         double[] dou = (double[])decimalColumn.Data;
                         return dou[0];
                     default:
-                        throw new System.Exception("Unknown datatype:" + dataFields[columnIndex].DataType);
+                        throw new Exception("Unknown datatype:" + dataFields[columnIndex].DataType);
                 }
             }
         }
@@ -327,13 +353,13 @@ namespace Frends.Community.Apache.Tests
                 ThrowExceptionOnErrorResponse = true,
                 Schema = @"[
     {""name"": ""Id"", ""type"": ""int?""},
-    {""name"": ""Decimal"", ""type"": ""decimal?""" + (System.String.IsNullOrEmpty(cultureStr) ? "}" : @",""culture"": """ + cultureStr + @"""}") + @",
-    {""name"": ""Float"", ""type"": ""float?""" + (System.String.IsNullOrEmpty(cultureStr) ? "}" : @",""culture"": """ + cultureStr + @"""}") + @",
-    {""name"": ""Double"", ""type"": ""double?""" + (System.String.IsNullOrEmpty(cultureStr) ? "}" : @",""culture"": """ + cultureStr + @"""}") + @",
+    {""name"": ""Decimal"", ""type"": ""decimal?""" + (string.IsNullOrEmpty(cultureStr) ? "}" : @",""culture"": """ + cultureStr + @"""}") + @",
+    {""name"": ""Float"", ""type"": ""float?""" + (string.IsNullOrEmpty(cultureStr) ? "}" : @",""culture"": """ + cultureStr + @"""}") + @",
+    {""name"": ""Double"", ""type"": ""double?""" + (string.IsNullOrEmpty(cultureStr) ? "}" : @",""culture"": """ + cultureStr + @"""}") + @",
 ]"
             };
 
-            ApacheTasks.ConvertCsvToParquet(input, options, poptions, new System.Threading.CancellationToken());
+            ApacheTasks.ConvertCsvToParquet(input, options, poptions, new CancellationToken());
         }
 
         private void RunDecimalTestNormal(string cultureStr, string inputFileName)
@@ -359,13 +385,13 @@ namespace Frends.Community.Apache.Tests
                 ThrowExceptionOnErrorResponse = true,
                 Schema = @"[
     {""name"": ""Id"", ""type"": ""int""},
-    {""name"": ""Decimal"", ""type"": ""decimal""" + (System.String.IsNullOrEmpty(cultureStr) ? "}" : @",""culture"": """ + cultureStr + @"""}") + @",
-    {""name"": ""Float"", ""type"": ""float""" + (System.String.IsNullOrEmpty(cultureStr) ? "}" : @",""culture"": """ + cultureStr + @"""}") + @",
-    {""name"": ""Double"", ""type"": ""double""" + (System.String.IsNullOrEmpty(cultureStr) ? "}" : @",""culture"": """ + cultureStr + @"""}") + @",
+    {""name"": ""Decimal"", ""type"": ""decimal""" + (string.IsNullOrEmpty(cultureStr) ? "}" : @",""culture"": """ + cultureStr + @"""}") + @",
+    {""name"": ""Float"", ""type"": ""float""" + (string.IsNullOrEmpty(cultureStr) ? "}" : @",""culture"": """ + cultureStr + @"""}") + @",
+    {""name"": ""Double"", ""type"": ""double""" + (string.IsNullOrEmpty(cultureStr) ? "}" : @",""culture"": """ + cultureStr + @"""}") + @",
 ]"
             };
 
-            ApacheTasks.ConvertCsvToParquet(input, options, poptions, new System.Threading.CancellationToken());
+            ApacheTasks.ConvertCsvToParquet(input, options, poptions, new CancellationToken());
         }
 
         /// <summary>
@@ -399,11 +425,19 @@ namespace Frends.Community.Apache.Tests
                 Schema = _commonSchema
             };
 
-            ApacheTasks.ConvertCsvToParquet(input, options, poptions, new System.Threading.CancellationToken());
+            ApacheTasks.ConvertCsvToParquet(input, options, poptions, new CancellationToken());
 
             var hash = TestTools.MD5Hash(_outputFileName);
-            string errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '3d6f72d1664b6a4040d2f12457264060'";
-            Assert.IsTrue(hash == "3d6f72d1664b6a4040d2f12457264060", errMessage);
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                string errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '045c6a617a1d37e0a1b464ccdeea2979'";
+                Assert.IsTrue(hash == "045c6a617a1d37e0a1b464ccdeea2979", errMessage);
+            }
+            else
+            {
+                string errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '3d6f72d1664b6a4040d2f12457264060'";
+                Assert.IsTrue(hash == "3d6f72d1664b6a4040d2f12457264060", errMessage);
+            }
         }
 
 
@@ -439,12 +473,19 @@ namespace Frends.Community.Apache.Tests
                 Schema = schema
             };
 
-            ApacheTasks.ConvertCsvToParquet(input, options, poptions, new System.Threading.CancellationToken());
+            ApacheTasks.ConvertCsvToParquet(input, options, poptions, new CancellationToken());
 
             var hash = TestTools.MD5Hash(_outputFileName);
-            string errMessage = $"File checksum didn't match. Generated checksum: '{hash}' differs the expected checksum: 'd214884cf6a6596cbc69a174bdd60805'";
-
-            Assert.IsTrue(hash == "d214884cf6a6596cbc69a174bdd60805", errMessage);
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                string errMessage = $"File checksum didn't match. Generated checksum: '{hash}' differs the expected checksum: '936a383c5b5f5665114f48c804f52bd3'";
+                Assert.IsTrue(hash == "936a383c5b5f5665114f48c804f52bd3", errMessage);
+            }
+            else
+            {
+                string errMessage = $"File checksum didn't match. Generated checksum: '{hash}' differs the expected checksum: 'd214884cf6a6596cbc69a174bdd60805'";
+                Assert.IsTrue(hash == "d214884cf6a6596cbc69a174bdd60805", errMessage);
+            }
         }
 
 
@@ -459,14 +500,14 @@ namespace Frends.Community.Apache.Tests
             // Has to be fixed date, otherwise the MD5 hash of the final file changes every day and the unit test starts to fail
             var dateTimeToWrite = new DateTime(2000, 01, 01).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
 
-            using (StreamWriter outputFile = new StreamWriter(fileName, false, System.Text.Encoding.UTF8))
+            using (var outputFile = new StreamWriter(fileName, false, Encoding.UTF8))
             {
                 outputFile.WriteLine("Id;Date;Decimal;Text");
                 for (int i = 0; i < rows; i++)
                 {
                     double dec1 = (i + 1.0) + (i % 100) / 100.0;
                     outputFile.WriteLine((i + 1) + ";" + dateTimeToWrite + ";" +
-                        dec1.ToString(System.Globalization.CultureInfo.InvariantCulture) + ";" +
+                        dec1.ToString(CultureInfo.InvariantCulture) + ";" +
                         "Testirivi " + (i + 1) + " ja jotain tekstiä.");
                 }
             }

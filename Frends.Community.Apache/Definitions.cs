@@ -153,21 +153,15 @@ namespace Frends.Community.Apache
         /// <returns></returns>
         public static Encoding GetEncoding(FileEncoding optionsFileEncoding, bool optionsEnableBom, string optionsEncodingInString)
         {
-            switch (optionsFileEncoding)
+            return optionsFileEncoding switch
             {
-                case FileEncoding.Other:
-                    return Encoding.GetEncoding(optionsEncodingInString);
-                case FileEncoding.ASCII:
-                    return Encoding.ASCII;
-                case FileEncoding.ANSI:
-                    return Encoding.Default;
-                case FileEncoding.UTF8:
-                    return optionsEnableBom ? new UTF8Encoding(true) : new UTF8Encoding(false);
-                case FileEncoding.Unicode:
-                    return Encoding.Unicode;
-                default:
-                    throw new ArgumentOutOfRangeException(optionsFileEncoding.ToString());
-            }
+                FileEncoding.Other => Encoding.GetEncoding(optionsEncodingInString),
+                FileEncoding.ASCII => Encoding.ASCII,
+                FileEncoding.ANSI => Encoding.Default,
+                FileEncoding.UTF8 => optionsEnableBom ? new UTF8Encoding(true) : new UTF8Encoding(false),
+                FileEncoding.Unicode => Encoding.Unicode,
+                _ => throw new ArgumentOutOfRangeException(optionsFileEncoding.ToString()),
+            };
         }
 
         /// <summary>
@@ -177,17 +171,13 @@ namespace Frends.Community.Apache
         /// <returns>CompressionMethod</returns>
         public static CompressionMethod GetCompressionMethod(CompressionType optionsCompressType)
         {
-            switch (optionsCompressType)
+            return optionsCompressType switch
             {
-                case CompressionType.Gzip:
-                    return CompressionMethod.Gzip;
-                case CompressionType.Snappy:
-                    return CompressionMethod.Snappy;
-                case CompressionType.None:
-                    return CompressionMethod.None;
-                default:
-                    throw new ArgumentOutOfRangeException(optionsCompressType.ToString());
-            }
+                CompressionType.Gzip => CompressionMethod.Gzip,
+                CompressionType.Snappy => CompressionMethod.Snappy,
+                CompressionType.None => CompressionMethod.None,
+                _ => throw new ArgumentOutOfRangeException(optionsCompressType.ToString()),
+            };
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
 
 #pragma warning disable 1591
@@ -26,13 +25,13 @@ namespace Frends.Community.Apache
                 string format = element.Value<string>("format");
                 string culture = element.Value<string>("culture");
 
-                if (String.IsNullOrWhiteSpace(format))
+                if (string.IsNullOrWhiteSpace(format))
                 {
                     format = "";
                 }
 
                 // Culture overwrites format. (decimals, floats and doubles)
-                if (!String.IsNullOrWhiteSpace(culture))
+                if (!string.IsNullOrWhiteSpace(culture))
                 {
                     format = culture;
                 }

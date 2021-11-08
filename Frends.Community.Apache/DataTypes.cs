@@ -53,7 +53,7 @@ namespace Frends.Community.Apache
         /// <param name="field">Datatype</param>
         /// <param name="groupSize">Array size</param>
         /// <returns>Array</returns>
-        public static Object GetCSVColumnStorage(DataField field, long groupSize)
+        public static object GetCSVColumnStorage(DataField field, long groupSize)
         {
             DataType fieldType = field.DataType;
 
@@ -72,13 +72,11 @@ namespace Frends.Community.Apache
                     case DataType.Float:
                         return new float?[groupSize];
                     case DataType.Int16:
-                        return new Int16?[groupSize];
+                        return new short?[groupSize];
                     case DataType.Int32:
-                        return new Int32?[groupSize];
+                        return new int?[groupSize];
                     case DataType.Int64:
-                        return new Int64?[groupSize];
-                    //case "int96":
-                    // this is for datetimes. Use datetimeoffset
+                        return new long?[groupSize];
                     case DataType.String:
                         return new string[groupSize];
                     default:
@@ -100,13 +98,11 @@ namespace Frends.Community.Apache
                     case DataType.Float:
                         return new float[groupSize];
                     case DataType.Int16:
-                        return new Int16[groupSize];
+                        return new short[groupSize];
                     case DataType.Int32:
-                        return new Int32[groupSize];
+                        return new int[groupSize];
                     case DataType.Int64:
-                        return new Int64[groupSize];
-                    //case "int96":
-                    // this is for datetimes. Use datetimeoffset
+                        return new long[groupSize];
                     case DataType.String:
                         return new string[groupSize];
                     default:

@@ -44,13 +44,13 @@ namespace Frends.Community.Apache
                                 rg.WriteColumn(new DataColumn(fields[i], ((float?[])csvColumns[i])));
                                 break;
                             case DataType.Int16:
-                                rg.WriteColumn(new DataColumn(fields[i], ((Int16?[])csvColumns[i])));
+                                rg.WriteColumn(new DataColumn(fields[i], ((short?[])csvColumns[i])));
                                 break;
                             case DataType.Int32:
-                                rg.WriteColumn(new DataColumn(fields[i], ((Int32?[])csvColumns[i])));
+                                rg.WriteColumn(new DataColumn(fields[i], ((int?[])csvColumns[i])));
                                 break;
                             case DataType.Int64:
-                                rg.WriteColumn(new DataColumn(fields[i], ((Int64?[])csvColumns[i])));
+                                rg.WriteColumn(new DataColumn(fields[i], ((long?[])csvColumns[i])));
                                 break;
                             case DataType.String:
                                 rg.WriteColumn(new DataColumn(fields[i], ((string[])csvColumns[i])));
@@ -79,13 +79,13 @@ namespace Frends.Community.Apache
                                 rg.WriteColumn(new DataColumn(fields[i], ((float[])csvColumns[i])));
                                 break;
                             case DataType.Int16:
-                                rg.WriteColumn(new DataColumn(fields[i], ((Int16[])csvColumns[i])));
+                                rg.WriteColumn(new DataColumn(fields[i], ((short[])csvColumns[i])));
                                 break;
                             case DataType.Int32:
-                                rg.WriteColumn(new DataColumn(fields[i], ((Int32[])csvColumns[i])));
+                                rg.WriteColumn(new DataColumn(fields[i], ((int[])csvColumns[i])));
                                 break;
                             case DataType.Int64:
-                                rg.WriteColumn(new DataColumn(fields[i], ((Int64[])csvColumns[i])));
+                                rg.WriteColumn(new DataColumn(fields[i], ((long[])csvColumns[i])));
                                 break;
                             case DataType.String:
                                 rg.WriteColumn(new DataColumn(fields[i], ((string[])csvColumns[i])));
@@ -105,7 +105,7 @@ namespace Frends.Community.Apache
         /// <returns>CultureInfo</returns>
         public static CultureInfo GetCultureInfo(string culture)
         {
-            if (System.String.IsNullOrEmpty(culture))
+            if (string.IsNullOrEmpty(culture))
             {
                 //return CultureInfo.InvariantCulture;
                 return new CultureInfo("fi-FI");
@@ -121,11 +121,11 @@ namespace Frends.Community.Apache
         /// </summary>
         /// <param name="value">Int16 as string</param>
         /// <returns>Int16</returns>
-        public static Int16? GetInt16ValueNullable(string value)
+        public static short? GetInt16ValueNullable(string value)
         {
-            if (!String.IsNullOrWhiteSpace(value))
+            if (!string.IsNullOrWhiteSpace(value))
             {
-                return Int16.Parse(value);
+                return short.Parse(value);
             }
             return null;
         }
@@ -135,11 +135,11 @@ namespace Frends.Community.Apache
         /// </summary>
         /// <param name="value">Int32 as string</param>
         /// <returns>Int32</returns>
-        public static Int32? GetInt32ValueNullable(string value)
+        public static int? GetInt32ValueNullable(string value)
         {
-            if (!String.IsNullOrWhiteSpace(value))
+            if (!string.IsNullOrWhiteSpace(value))
             {
-                return Int32.Parse(value);
+                return int.Parse(value);
             }
             return null;
         }
@@ -149,11 +149,11 @@ namespace Frends.Community.Apache
         /// </summary>
         /// <param name="value">Int64 as string</param>
         /// <returns>Int64</returns>
-        public static Int64? GetInt64ValueNullable(string value)
+        public static long? GetInt64ValueNullable(string value)
         {
-            if (!String.IsNullOrWhiteSpace(value))
+            if (!string.IsNullOrWhiteSpace(value))
             {
-                return Int64.Parse(value);
+                return long.Parse(value);
             }
             return null;
         }
@@ -166,9 +166,9 @@ namespace Frends.Community.Apache
         /// <returns>float</returns>
         public static float? GetFloatValue(string value, string culture)
         {
-            if (!String.IsNullOrWhiteSpace(value))
+            if (!string.IsNullOrWhiteSpace(value))
             {
-                return float.Parse(value, Writer.GetCultureInfo(culture));
+                return float.Parse(value, GetCultureInfo(culture));
             }
             return null;
         }
@@ -181,9 +181,9 @@ namespace Frends.Community.Apache
         /// <returns>decimal</returns>
         public static decimal? GetDecimalValueNullable(string value, string culture)
         {
-            if (!String.IsNullOrWhiteSpace(value))
+            if (!string.IsNullOrWhiteSpace(value))
             {
-                return decimal.Parse(value, Writer.GetCultureInfo(culture));
+                return decimal.Parse(value, GetCultureInfo(culture));
             }
             return null;
         }
@@ -196,9 +196,9 @@ namespace Frends.Community.Apache
         /// <returns>double</returns>
         public static double? GetDoubleValueNullable(string value, string culture)
         {
-            if (!String.IsNullOrWhiteSpace(value))
+            if (!string.IsNullOrWhiteSpace(value))
             {
-                return double.Parse(value, Writer.GetCultureInfo(culture));
+                return double.Parse(value, GetCultureInfo(culture));
             }
             return null;
         }
@@ -210,7 +210,7 @@ namespace Frends.Community.Apache
         /// <returns>boolean</returns>
         public static bool? GetBooleanValueNullable(string value)
         {
-            if (!String.IsNullOrWhiteSpace(value))
+            if (!string.IsNullOrWhiteSpace(value))
             {
                 if (value.ToLower() == "true" || value == "1")
                 {
@@ -253,9 +253,9 @@ namespace Frends.Community.Apache
         /// <returns>datetimeoffset object</returns>
         public static DateTimeOffset? GetDateTimeOffsetValueNullable(string dtStr, string timeFormat)
         {
-            if (!String.IsNullOrWhiteSpace(dtStr))
+            if (!string.IsNullOrWhiteSpace(dtStr))
             {
-                if (!String.IsNullOrWhiteSpace(timeFormat))
+                if (!string.IsNullOrWhiteSpace(timeFormat))
                 {
                     if (DateTimeOffset.TryParseExact(dtStr, timeFormat, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTimeOffset dt))
                     {
@@ -282,7 +282,7 @@ namespace Frends.Community.Apache
         /// <returns>datetimeoffset object</returns>
         public static DateTimeOffset GetDateTimeOffsetValue(string dtStr, string timeFormat)
         {
-            if (!String.IsNullOrWhiteSpace(timeFormat))
+            if (!string.IsNullOrWhiteSpace(timeFormat))
             {
                 if (DateTimeOffset.TryParseExact(dtStr, timeFormat, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTimeOffset dt))
                 {

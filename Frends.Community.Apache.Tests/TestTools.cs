@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Security.Cryptography;
+using System.Globalization;
 
 namespace Frends.Community.Apache.Tests
 {
@@ -19,7 +20,7 @@ namespace Frends.Community.Apache.Tests
 
             var hash = md5.ComputeHash(stream);
 
-            return BitConverter.ToString(hash).Replace("-", String.Empty).ToLower(System.Globalization.CultureInfo.InvariantCulture);
+            return BitConverter.ToString(hash).Replace("-", string.Empty).ToLower(CultureInfo.InvariantCulture);
         }
 
         /// <summary>
