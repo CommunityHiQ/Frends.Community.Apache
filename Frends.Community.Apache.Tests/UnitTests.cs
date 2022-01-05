@@ -29,6 +29,12 @@ namespace Frends.Community.Apache.Tests
     {""name"": ""Decimal"", ""type"": ""decimal?"", ""culture"": ""en-US""},
     { ""name"": ""Description"", ""type"": ""string?""},
 ]";
+        private const string _commonSchemaFalse = @"[
+    { ""name"": ""Id"", ""typr"": ""int?""},
+    {""name"": ""Time"", ""type"": ""datetime?"", ""format"": ""dd.MM.yyyy""},
+    {""name"": ""Decimal"", ""tpe"": ""decimal?"", ""culture"": ""en-US""},
+    { ""name"": ""Description"", ""type"": ""string?""},
+]";
 
 
         [SetUp]
@@ -126,6 +132,47 @@ namespace Frends.Community.Apache.Tests
             {
                 string errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '3d6f72d1664b6a4040d2f12457264060'";
                 Assert.IsTrue(hash == "3d6f72d1664b6a4040d2f12457264060", errMessage);
+            }
+        }
+
+        /// <summary>
+        /// Simple csv -> parquet with invalid schema test
+        /// </summary>
+        [Test]
+        public void TestInvalidSchema()
+        {
+            TestTools.RemoveOutputFile(_outputFileName);
+
+            var options = new WriteCSVOptions()
+            {
+                CsvDelimiter = ";",
+                FileEncoding = FileEncoding.UTF8,
+                EnableBom = false,
+                EncodingInString = ""
+            };
+
+            var poptions = new WriteParquetOptions()
+            {
+                ParquetRowGroupSize = 5000,
+                ParquetCompressionMethod = CompressionType.Gzip,
+
+            };
+
+            var input = new WriteInput()
+            {
+                CsvFileName = _inputCsvFileName,
+                OuputFileName = _outputFileName,
+                ThrowExceptionOnErrorResponse = true,
+                Schema = _commonSchemaFalse
+            };
+
+            try
+            {
+                ApacheTasks.ConvertCsvToParquet(input, options, poptions, new CancellationToken());
+            }
+            catch (Exception ex)
+            {
+                Assert.AreEqual("Invalid schema", ex.Message);
             }
         }
 

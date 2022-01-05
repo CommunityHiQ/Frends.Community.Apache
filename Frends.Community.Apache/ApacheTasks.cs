@@ -33,8 +33,47 @@ namespace Frends.Community.Apache
                 var encoding = Definitions.GetEncoding(csvOptions.FileEncoding, csvOptions.EnableBom, csvOptions.EncodingInString);
                 var jsonConf = JToken.Parse(input.Schema);
 
+                // Check schema
+                try
+                {
+                    var arr = JArray.Parse(jsonConf.ToString());
+
+                    // Check data columns types. Accepted data types: name, type, format and culture
+                    var lineCount = 1;
+                    foreach (var content in arr.Children<JObject>())
+                    {
+                        lineCount++;
+                        foreach (var prop in content.Properties())
+                        {
+                            if (!prop.Name.Equals("name") && !prop.Name.Equals("type") && !prop.Name.Equals("format") && !prop.Name.Equals("culture"))
+                            {
+                                throw new ArgumentException($"Data columns type was incorrect at line {lineCount}. Incorrect data type: {prop.Name}");
+                            }
+                        }
+                    }
+
+                    // Check that null values are not given
+                    var count = 1;
+                    foreach (var item in arr)
+                    {
+                        count++;
+                        if(item["name"] == null || item["type"] == null)
+                        {
+                            throw new ArgumentException($"Schema was invalid at line {count}. Null values are invalid.");
+                            
+                        }
+
+                    }
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("Invalid schema", e);
+                }
+                
+                CsvConfiguration csvConfiguration;
+
                 // Create CSV configuration
-                var csvConfiguration = new CsvConfiguration(new CultureInfo(csvOptions.CultureInfo))
+                csvConfiguration = new CsvConfiguration(new CultureInfo(csvOptions.CultureInfo))
                 {
                     Delimiter = csvOptions.CsvDelimiter,
                     HasHeaderRecord = csvOptions.ContainsHeaderRow,

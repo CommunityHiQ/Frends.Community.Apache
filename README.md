@@ -101,5 +101,6 @@ NOTE: Be sure to merge the latest from "upstream" before making a pull request!
 
 | Version | Changes |
 | ------- | ------- |
+| 1.0.2 | Fixed issue #2: Typos/errors are difficult to find in configuration |
 | 1.0.1 | Multitarget conversion and CI |
 | 1.0.0  | First version. Includes task ConvertCsvToParquet  |
