@@ -51,19 +51,6 @@ namespace Frends.Community.Apache
                             }
                         }
                     }
-
-                    // Check that null values are not given
-                    var count = 1;
-                    foreach (var item in arr)
-                    {
-                        count++;
-                        if(item["name"] == null || item["type"] == null)
-                        {
-                            throw new ArgumentException($"Schema was invalid at line {count}. Null values are invalid.");
-                            
-                        }
-
-                    }
                 }
                 catch (Exception e)
                 {

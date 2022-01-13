@@ -36,7 +36,6 @@ namespace Frends.Community.Apache.Tests
     { ""name"": ""Description"", ""type"": ""string?""},
 ]";
 
-
         [SetUp]
         public void Setup()
         {
@@ -137,6 +136,7 @@ namespace Frends.Community.Apache.Tests
 
         /// <summary>
         /// Simple csv -> parquet with invalid schema test
+        /// Tests also InnerException
         /// </summary>
         [Test]
         public void TestInvalidSchema()
@@ -166,14 +166,19 @@ namespace Frends.Community.Apache.Tests
                 Schema = _commonSchemaFalse
             };
 
-            try
+            void ConvertCsvToParquetThatThrowsWithTypos()
             {
                 ApacheTasks.ConvertCsvToParquet(input, options, poptions, new CancellationToken());
             }
-            catch (Exception ex)
-            {
-                Assert.AreEqual("Invalid schema", ex.Message);
-            }
+
+            Assert.That(ConvertCsvToParquetThatThrowsWithTypos,
+                Throws.TypeOf<Exception>()
+                    .With.Message.EqualTo("Invalid schema"));
+
+            var ex = Assert.Throws<Exception>((() => ConvertCsvToParquetThatThrowsWithTypos()));
+            Assert.That(ex.InnerException, Is.TypeOf<ArgumentException>()
+                .With.Message.StartsWith("Data columns type was incorrect at line"));
+
         }
 
         /// <summary>
