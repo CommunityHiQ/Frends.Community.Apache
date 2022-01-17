@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using Par = Parquet;
+using Parquet.Data;
 using System.Runtime.InteropServices;
 
 namespace Frends.Community.Apache.Tests
@@ -124,19 +124,19 @@ namespace Frends.Community.Apache.Tests
             var hash = TestTools.MD5Hash(_outputFileName);
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                string errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '045c6a617a1d37e0a1b464ccdeea2979'";
+                var errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '045c6a617a1d37e0a1b464ccdeea2979'";
                 Assert.IsTrue(hash == "045c6a617a1d37e0a1b464ccdeea2979", errMessage);
             }
             else
             {
-                string errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '3d6f72d1664b6a4040d2f12457264060'";
+                var errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '3d6f72d1664b6a4040d2f12457264060'";
                 Assert.IsTrue(hash == "3d6f72d1664b6a4040d2f12457264060", errMessage);
             }
         }
 
         /// <summary>
-        /// Simple csv -> parquet with invalid schema test
-        /// Tests also InnerException
+        /// Simple csv -> parquet with invalid schema test.
+        /// Tests also InnerException.
         /// </summary>
         [Test]
         public void TestInvalidSchema()
@@ -182,7 +182,7 @@ namespace Frends.Community.Apache.Tests
         }
 
         /// <summary>
-        /// Simple csv, no null values
+        /// Simple csv, no null values.
         /// </summary>
         [Test]
         public void WriteParquetFileNoNulls()
@@ -216,18 +216,18 @@ namespace Frends.Community.Apache.Tests
             var hash = TestTools.MD5Hash(_outputFileName);
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                string errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '6c80e7c86c8adf39b8544f7bc90724c8'";
+                var errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '6c80e7c86c8adf39b8544f7bc90724c8'";
                 Assert.IsTrue(hash == "6c80e7c86c8adf39b8544f7bc90724c8", errMessage);
             }
             else
             {
-                string errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: 'd5dcfc43ecd64da5f5013dab3095b777'";
+                var errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: 'd5dcfc43ecd64da5f5013dab3095b777'";
                 Assert.IsTrue(hash == "d5dcfc43ecd64da5f5013dab3095b777", errMessage);
             }
         }
 
         /// <summary>
-        /// Quotes test
+        /// Quotes test.
         /// </summary>
         [Test]
         public void WriteParquetFileQuotes()
@@ -262,12 +262,12 @@ namespace Frends.Community.Apache.Tests
             var hash = TestTools.MD5Hash(_outputFileName);
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                string errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '86692194196efecc823d48384bd2a5a5'";
+                var errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '86692194196efecc823d48384bd2a5a5'";
                 Assert.IsTrue(hash == "86692194196efecc823d48384bd2a5a5", errMessage);
             }
             else
             {
-                string errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '94e1bfe7bf71d94d5bd52f2de2af658b'";
+                var errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '94e1bfe7bf71d94d5bd52f2de2af658b'";
                 Assert.IsTrue(hash == "94e1bfe7bf71d94d5bd52f2de2af658b", errMessage);
             }
         }
@@ -281,7 +281,6 @@ namespace Frends.Community.Apache.Tests
         {
             TestTools.RemoveOutputFile(_outputFileName);
             RunDecimalTestNullable("en-US", _inputCsvFileNameDecDot);
-            //var hash = TestTools.MD5Hash(_outputFileName);
 
             Assert.AreEqual(12345.6789m, ReturnFirstDecimal(_outputFileName, 1));
             Assert.AreEqual(12345.6789f, ReturnFirstDecimal(_outputFileName, 2));
@@ -289,14 +288,13 @@ namespace Frends.Community.Apache.Tests
         }
 
         /// <summary>
-        /// Now cultere is empty -> default should be CultureInfo.InvariantCulture
+        /// Now cultere is empty -> default should be CultureInfo.InvariantCulture.
         /// </summary>
         [Test]
         public void DecimalTestDefault()
         {
             TestTools.RemoveOutputFile(_outputFileName);
             RunDecimalTestNormal("", _inputCsvFileNameDecComma);
-            //var hash = TestTools.MD5Hash(_outputFileName);
 
             Assert.AreEqual(12345.6789m, ReturnFirstDecimal(_outputFileName, 1));
             Assert.AreEqual(12345.6789f, ReturnFirstDecimal(_outputFileName, 2));
@@ -311,7 +309,6 @@ namespace Frends.Community.Apache.Tests
         {
             TestTools.RemoveOutputFile(_outputFileName);
             RunDecimalTestNullable("fi-FI", _inputCsvFileNameDecComma);
-            //var hash = TestTools.MD5Hash(_outputFileName);
 
             Assert.AreEqual(12345.6789m, ReturnFirstDecimal(_outputFileName, 1));
             Assert.AreEqual(12345.6789f, ReturnFirstDecimal(_outputFileName, 2));
@@ -319,7 +316,7 @@ namespace Frends.Community.Apache.Tests
         }
 
         /// <summary>
-        /// Reads first decimal from first group and given column
+        /// Reads first decimal from first group and given column.
         /// </summary>
         /// <param name="parquetFilePath">Full filepath</param>
         /// <param name="columnIndex">Column index 0...n</param>
@@ -334,25 +331,25 @@ namespace Frends.Community.Apache.Tests
             var options = new ParquetOptions { TreatByteArrayAsString = true };
             var parquetReader = new ParquetReader(filereader, options);
 
-            Par.Data.DataField[] dataFields = parquetReader.Schema.GetDataFields();
+            var dataFields = parquetReader.Schema.GetDataFields();
 
-            using ParquetRowGroupReader groupReader = parquetReader.OpenRowGroupReader(0);
+            using var groupReader = parquetReader.OpenRowGroupReader(0);
 
-            Par.Data.DataColumn[] columns = dataFields.Select(groupReader.ReadColumn).ToArray();
-            Par.Data.DataColumn decimalColumn = columns[columnIndex];
+            var columns = dataFields.Select(groupReader.ReadColumn).ToArray();
+            var decimalColumn = columns[columnIndex];
 
             if (dataFields[columnIndex].HasNulls)
             {
                 switch (dataFields[columnIndex].DataType)
                 {
-                    case Par.Data.DataType.Decimal:
-                        decimal?[] dec = (decimal?[])decimalColumn.Data;
+                    case DataType.Decimal:
+                        var dec = (decimal?[])decimalColumn.Data;
                         return dec[0];
-                    case Par.Data.DataType.Float:
-                        float?[] flo = (float?[])decimalColumn.Data;
+                    case DataType.Float:
+                        var flo = (float?[])decimalColumn.Data;
                         return flo[0];
-                    case Par.Data.DataType.Double:
-                        double?[] dou = (double?[])decimalColumn.Data;
+                    case DataType.Double:
+                        var dou = (double?[])decimalColumn.Data;
                         return dou[0];
                     default:
                         throw new Exception("Unknown nullable datatype:" + dataFields[columnIndex].DataType);
@@ -362,14 +359,14 @@ namespace Frends.Community.Apache.Tests
             {
                 switch (dataFields[columnIndex].DataType)
                 {
-                    case Par.Data.DataType.Decimal:
-                        decimal[] dec = (decimal[])decimalColumn.Data;
+                    case DataType.Decimal:
+                        var dec = (decimal[])decimalColumn.Data;
                         return dec[0];
-                    case Par.Data.DataType.Float:
-                        float[] flo = (float[])decimalColumn.Data;
+                    case DataType.Float:
+                        var flo = (float[])decimalColumn.Data;
                         return flo[0];
-                    case Par.Data.DataType.Double:
-                        double[] dou = (double[])decimalColumn.Data;
+                    case DataType.Double:
+                        var dou = (double[])decimalColumn.Data;
                         return dou[0];
                     default:
                         throw new Exception("Unknown datatype:" + dataFields[columnIndex].DataType);
@@ -378,7 +375,7 @@ namespace Frends.Community.Apache.Tests
         }
 
         /// <summary>
-        /// Runs decimal tests using static schema and given input
+        /// Runs decimal tests using static schema and given input.
         /// </summary>
         /// <param name="decimalType"></param>
         /// <param name="inputFileName"></param>
@@ -447,7 +444,7 @@ namespace Frends.Community.Apache.Tests
         }
 
         /// <summary>
-        /// Test case for counting rows before processing
+        /// Test case for counting rows before processing.
         /// </summary>
         [Test]
         public void WriteParquetFileCountRows()
@@ -482,26 +479,26 @@ namespace Frends.Community.Apache.Tests
             var hash = TestTools.MD5Hash(_outputFileName);
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                string errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '045c6a617a1d37e0a1b464ccdeea2979'";
+                var errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '045c6a617a1d37e0a1b464ccdeea2979'";
                 Assert.IsTrue(hash == "045c6a617a1d37e0a1b464ccdeea2979", errMessage);
             }
             else
             {
-                string errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '3d6f72d1664b6a4040d2f12457264060'";
+                var errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '3d6f72d1664b6a4040d2f12457264060'";
                 Assert.IsTrue(hash == "3d6f72d1664b6a4040d2f12457264060", errMessage);
             }
         }
 
 
         /// <summary>
-        /// Simple csv -> parquet test case with large group size
+        /// Simple csv -> parquet test case with large group size.
         /// </summary>
         [Test]
         public void WriteParquetFileMaxMemory()
         {
             TestTools.RemoveOutputFile(_outputFileName);
 
-            string schema = CreateLargeCSVFile(_inputCsvFileNameLarge, 1000000);
+            var schema = CreateLargeCSVFile(_inputCsvFileNameLarge, 1000000);
 
             var options = new WriteCSVOptions()
             {
@@ -530,34 +527,34 @@ namespace Frends.Community.Apache.Tests
             var hash = TestTools.MD5Hash(_outputFileName);
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                string errMessage = $"File checksum didn't match. Generated checksum: '{hash}' differs the expected checksum: '936a383c5b5f5665114f48c804f52bd3'";
+                var errMessage = $"File checksum didn't match. Generated checksum: '{hash}' differs the expected checksum: '936a383c5b5f5665114f48c804f52bd3'";
                 Assert.IsTrue(hash == "936a383c5b5f5665114f48c804f52bd3", errMessage);
             }
             else
             {
-                string errMessage = $"File checksum didn't match. Generated checksum: '{hash}' differs the expected checksum: 'd214884cf6a6596cbc69a174bdd60805'";
+                var errMessage = $"File checksum didn't match. Generated checksum: '{hash}' differs the expected checksum: 'd214884cf6a6596cbc69a174bdd60805'";
                 Assert.IsTrue(hash == "d214884cf6a6596cbc69a174bdd60805", errMessage);
             }
         }
 
 
         /// <summary>
-        /// Creates CSV file and returns JSON schema for Parquet
+        /// Creates CSV file and returns JSON schema for Parquet.
         /// </summary>
         /// <param name="fileName">CSV filename, full path</param>
         /// <param name="rows">Number of rows</param>
-        /// <returns>JSON schema of the csv file</returns>
+        /// <returns>JSON schema of the csv file.</returns>
         private string CreateLargeCSVFile(string fileName, int rows)
         {
-            // Has to be fixed date, otherwise the MD5 hash of the final file changes every day and the unit test starts to fail
+            // Has to be fixed date, otherwise the MD5 hash of the final file changes every day and the unit test starts to fail.
             var dateTimeToWrite = new DateTime(2000, 01, 01).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
 
             using (var outputFile = new StreamWriter(fileName, false, Encoding.UTF8))
             {
                 outputFile.WriteLine("Id;Date;Decimal;Text");
-                for (int i = 0; i < rows; i++)
+                for (var i = 0; i < rows; i++)
                 {
-                    double dec1 = (i + 1.0) + (i % 100) / 100.0;
+                    var dec1 = (i + 1.0) + (i % 100) / 100.0;
                     outputFile.WriteLine((i + 1) + ";" + dateTimeToWrite + ";" +
                         dec1.ToString(CultureInfo.InvariantCulture) + ";" +
                         "Testirivi " + (i + 1) + " ja jotain tekstiä.");

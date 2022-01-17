@@ -10,7 +10,7 @@ namespace Frends.Community.Apache
         private readonly Dictionary<string, string> _config;
 
         /// <summary>
-        /// Creates config data structure for later use
+        /// Creates config data structure for later use.
         /// </summary>
         /// <param name="json">JSON configuration</param>
         /// <returns>Config dictionary</returns>
@@ -18,30 +18,24 @@ namespace Frends.Community.Apache
         {
             _config = new Dictionary<string, string>();
 
-            // A simple key-value store
+            // A simple key-value store.
             foreach (var element in json)
             {
-                string name = element.Value<string>("name");
-                string format = element.Value<string>("format");
-                string culture = element.Value<string>("culture");
+                var name = element.Value<string>("name");
+                var format = element.Value<string>("format");
+                var culture = element.Value<string>("culture");
 
-                if (string.IsNullOrWhiteSpace(format))
-                {
-                    format = "";
-                }
+                if (string.IsNullOrWhiteSpace(format)) format = "";
 
-                // Culture overwrites format. (decimals, floats and doubles)
-                if (!string.IsNullOrWhiteSpace(culture))
-                {
-                    format = culture;
-                }
+                // Culture overwrites format (decimals, floats and doubles).
+                if (!string.IsNullOrWhiteSpace(culture)) format = culture;
 
                 _config[name] = format;
             }
         }
 
         /// <summary>
-        /// Gets value from config using key - for future use
+        /// Gets value from config using key - for future use.
         /// </summary>
         /// <param name="key">Key</param>
         /// <returns>Value</returns>
