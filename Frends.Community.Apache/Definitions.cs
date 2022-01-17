@@ -11,7 +11,7 @@ namespace Frends.Community.Apache
     public class WriteInput
     {
         /// <summary>
-        /// Data columns types for Parquet as JSON
+        /// Data columns types for Parquet as JSON.
         /// </summary>
         [DisplayFormat(DataFormatString = "Json")]
         [DefaultValue(@"[
@@ -22,21 +22,21 @@ namespace Frends.Community.Apache
         public string Schema { get; set; }
 
         /// <summary>
-        /// CSV filename
+        /// CSV filename.
         /// </summary>
         [DisplayFormat(DataFormatString = "Text")]
         [DefaultValue(@"C:\temp\test.csv")]
         public string CsvFileName { get; set; }
 
         /// <summary>
-        /// Output filename
+        /// Output filename.
         /// </summary>
         [DisplayFormat(DataFormatString = "Text")]
         [DefaultValue(@"c:\temp\test.parquet")]
         public string OuputFileName { get; set; }
 
         /// <summary>
-        /// Throw exception if return code of request is not successfull
+        /// Throw exception if return code of request is not successful.
         /// </summary>
         [DefaultValue("true")]
         public bool ThrowExceptionOnErrorResponse { get; set; } = true;
@@ -49,20 +49,20 @@ namespace Frends.Community.Apache
     public class WriteParquetOptions
     {
         /// <summary>
-        /// Parquet files row group size. Batch size should be large enough
-        /// because of perfomance later
+        /// Parquet files row group size.
+        /// Batch size should be large enough because of perfomance later.
         /// </summary>
         [DefaultValue("5000")]
         public long ParquetRowGroupSize { get; set; } = 5000;
 
         /// <summary>
-        /// Parquet Compression type: None / Snappy / GZip (smallest filesize)
+        /// Parquet Compression type: None / Snappy / GZip (smallest filesize).
         /// </summary>
         [DefaultValue(CompressionType.Gzip)]
         public CompressionType ParquetCompressionMethod { get; set; } = CompressionType.Gzip;
 
         /// <summary>
-        /// Does task read whole file and count rows before processing
+        /// Does task read whole file and count rows before processing.
         /// </summary>
         [DefaultValue(false)]
         public bool CountRowsBeforeProcessing { get; set; } = false;
@@ -71,7 +71,7 @@ namespace Frends.Community.Apache
     public class WriteCSVOptions
     {
         /// <summary>
-        /// The separator used in the csv string
+        /// The separator used in the csv string.
         /// </summary>
         [DisplayFormat(DataFormatString = "Text")]
         [DefaultValue("\";\"")]
@@ -103,7 +103,8 @@ namespace Frends.Community.Apache
         public string CultureInfo { get; set; } = "";
 
         /// <summary>
-        /// Encoding for the written content. By selecting 'Other' you can use any encoding.
+        /// Encoding for the written content.
+        /// By selecting 'Other' you can use any encoding.
         /// </summary>
         public FileEncoding FileEncoding { get; set; }
 
@@ -111,7 +112,8 @@ namespace Frends.Community.Apache
         public bool EnableBom { get; set; }
 
         /// <summary>
-        /// File encoding to be used. A partial list of possible encodings: https://en.wikipedia.org/wiki/Windows_code_page#List
+        /// File encoding to be used.
+        /// A partial list of possible encodings: https://en.wikipedia.org/wiki/Windows_code_page#List
         /// </summary>
         [UIHint(nameof(FileEncoding), "", FileEncoding.Other)]
         [DisplayFormat(DataFormatString = "Text")]
@@ -126,17 +128,17 @@ namespace Frends.Community.Apache
         public bool Success { get; set; }
 
         /// <summary>
-        /// Status message / error message
+        /// Status message / error message.
         /// </summary>
         public string StatusMessage { get; set; }
 
         /// <summary>
-        /// Output filename
+        /// Output filename.
         /// </summary>
         public string ParquetFileName { get; set; }
 
         /// <summary>
-        /// Number of CSV (and Parquet) data rows
+        /// Number of CSV (and Parquet) data rows.
         /// </summary>
         public int Rows { get; set; }
     }
@@ -145,7 +147,7 @@ namespace Frends.Community.Apache
     public static class Definitions
     {
         /// <summary>
-        /// Returns Encoding
+        /// Returns Encoding.
         /// </summary>
         /// <param name="optionsFileEncoding"></param>
         /// <param name="optionsEnableBom"></param>
@@ -165,7 +167,7 @@ namespace Frends.Community.Apache
         }
 
         /// <summary>
-        /// Gets compression method
+        /// Gets compression method.
         /// </summary>
         /// <param name="optionsCompressType">Gzip/Snappy/None</param>
         /// <returns>CompressionMethod</returns>

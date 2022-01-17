@@ -18,7 +18,7 @@ namespace Frends.Community.Apache
     public class ApacheTasks
     {
         /// <summary>
-        /// Converts csv file to Parquet file
+        /// Converts csv file to Parquet file.
         /// </summary>
         /// <param name="input">Input parameters</param>
         /// <param name="csvOptions">CSV file options</param>
@@ -26,14 +26,39 @@ namespace Frends.Community.Apache
         /// <returns>Object with following properties: bool Success, string StatusMsg, string ParquetFileName</returns>
         public static WriteResult ConvertCsvToParquet([PropertyTab] WriteInput input, [PropertyTab] WriteCSVOptions csvOptions, [PropertyTab] WriteParquetOptions parquetOptions, CancellationToken cancellationToken)
         {
-            int csvRowCount = 0;
+            var csvRowCount = 0;
 
             try
             {
                 var encoding = Definitions.GetEncoding(csvOptions.FileEncoding, csvOptions.EnableBom, csvOptions.EncodingInString);
                 var jsonConf = JToken.Parse(input.Schema);
 
-                // Create CSV configuration
+                // Check schema.
+                try
+                {
+                    var arr = JArray.Parse(jsonConf.ToString());
+
+                    // Check data columns types. Accepted data types: name, type, format and culture.
+                    var lineCount = 1;
+                    foreach (var content in arr.Children<JObject>())
+                    {
+                        lineCount++;
+                        foreach (var prop in content.Properties())
+                        {
+                            cancellationToken.ThrowIfCancellationRequested();
+                            if (!prop.Name.Equals("name") && !prop.Name.Equals("type") && !prop.Name.Equals("format") && !prop.Name.Equals("culture"))
+                            {
+                                throw new ArgumentException($"Data columns type was incorrect at line {lineCount}. Incorrect data type: {prop.Name}");
+                            }
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("Invalid schema", e);
+                }
+                
+                // Create CSV configuration.
                 var csvConfiguration = new CsvConfiguration(new CultureInfo(csvOptions.CultureInfo))
                 {
                     Delimiter = csvOptions.CsvDelimiter,
@@ -44,32 +69,32 @@ namespace Frends.Community.Apache
 
                 var config = new Config(jsonConf);
 
-                // Create schema for Parquet
+                // Create schema for Parquet.
                 var dataFields = CreateDataFields(jsonConf);
                 var schema = new Schema(dataFields);
-                int colCount = schema.Fields.Count;
+                var colCount = schema.Fields.Count;
 
-                // Decrease ParquetRowGroupSize if possible
+                // Decrease ParquetRowGroupSize if possible.
                 var fileInfo = new FileInfo(input.CsvFileName);
-                long csvFileSize = fileInfo.Length;
+                var csvFileSize = fileInfo.Length;
 
-                long parquetRowGroupSize = parquetOptions.ParquetRowGroupSize;
+                var parquetRowGroupSize = parquetOptions.ParquetRowGroupSize;
 
                 if (parquetRowGroupSize < 1)
                 {
                     throw new ArgumentException("ParguetRowGroupSize must be greater than 0.");
                 }
 
-                // Maximum rows of csv file: size of the file
+                // Maximum rows of csv file: size of the file.
                 if (parquetRowGroupSize > csvFileSize)
                 {
                     parquetRowGroupSize = csvFileSize;
                 }
 
-                // Count rows
+                // Count rows.
                 if (parquetOptions.CountRowsBeforeProcessing)
                 {
-                    long rowCount = 0;
+                    var rowCount = 0;
                     using (var reader = new StreamReader(input.CsvFileName, encoding))
                     using(var csv = new CsvReader(reader, csvConfiguration))
                     {
@@ -80,18 +105,16 @@ namespace Frends.Community.Apache
                         }
                         while (csv.Read())
                         {
+                            cancellationToken.ThrowIfCancellationRequested();
                             rowCount++;
                         }
                     }
-                    // Set the right count for memory optimization
-                    if (parquetRowGroupSize > rowCount)
-                    {
-                        parquetRowGroupSize = rowCount;
-                    }
+                    // Set the right count for memory optimization.
+                    if (parquetRowGroupSize > rowCount) parquetRowGroupSize = rowCount;
                 }
 
 
-                // Open file and read csv
+                // Open file and read csv.
                 // CSV is row-oriented, Parquet is column-oriented.
 
                 using (var reader = new StreamReader(input.CsvFileName, encoding))
@@ -100,7 +123,7 @@ namespace Frends.Community.Apache
                 using (var parquetWriter = new ParquetWriter(schema, fileStream))
                 {
                     {
-                        // Read header row
+                        // Read header row.
                         if (csvOptions.ContainsHeaderRow)
                         {
                             csv.Read();
@@ -109,20 +132,17 @@ namespace Frends.Community.Apache
                         parquetWriter.CompressionMethod = Definitions.GetCompressionMethod(parquetOptions.ParquetCompressionMethod);
 
                         var csvColumns = new List<object>();
-                        for (int i = 0; i < colCount; i++)
-                        {
-                            csvColumns.Add(DataTypes.GetCSVColumnStorage(dataFields[i], parquetRowGroupSize));
-                        }
+                        for (var i = 0; i < colCount; i++) csvColumns.Add(DataTypes.GetCSVColumnStorage(dataFields[i], parquetRowGroupSize));
 
-                        long dataIndex = 0;
+                        var dataIndex = 0;
 
                         try
                         {
-                            // Read csv rows
+                            // Read csv rows.
                             while (csv.Read())
                             {
-                                // Insert data to structure
-                                for (int i = 0; i < colCount; i++)
+                                // Insert data to structure.
+                                for (var i = 0; i < colCount; i++)
                                 {
                                     if (dataFields[i].HasNulls)
                                     {
@@ -198,7 +218,7 @@ namespace Frends.Community.Apache
 
                                 dataIndex++;
 
-                                // Write data if data structure is full
+                                // Write data if data structure is full.
                                 if (dataIndex >= parquetRowGroupSize)
                                 {
                                     Writer.WriteGroup(csvColumns, dataIndex, parquetWriter, dataFields, config);
@@ -207,7 +227,7 @@ namespace Frends.Community.Apache
 
                                 csvRowCount++;
 
-                                // Check if process is terminated
+                                // Check if process is terminated.
                                 cancellationToken.ThrowIfCancellationRequested();
                             }
                         }
@@ -216,16 +236,16 @@ namespace Frends.Community.Apache
                             throw new Exception($"CSV processing error in row {dataIndex + 1}", e);
                         }
 
-                        // Write non-empty data structure
+                        // Write non-empty data structure.
                         if (dataIndex > 0)
                         {
                             if (dataIndex < parquetRowGroupSize)
                             {
-                                for (int i = 0; i < colCount; i++)
+                                for (var i = 0; i < colCount; i++)
                                 {
-                                    Type elementType = csvColumns[i].GetType().GetElementType();
-                                    Array newArray = Array.CreateInstance(elementType, dataIndex);
-                                    Array.Copy((System.Array)csvColumns[i], newArray, dataIndex);
+                                    var elementType = csvColumns[i].GetType().GetElementType();
+                                    var newArray = Array.CreateInstance(elementType, dataIndex);
+                                    Array.Copy((Array)csvColumns[i], newArray, dataIndex);
                                     csvColumns[i] = newArray;
                                 }
                             }
@@ -234,7 +254,7 @@ namespace Frends.Community.Apache
                     }
                 }
 
-                // Return success
+                // Return success.
                 return new WriteResult()
                 {
                     Success = true,
@@ -245,12 +265,8 @@ namespace Frends.Community.Apache
             }
             catch (Exception e)
             {
-                // Throw exception or return error
-
-                if (input.ThrowExceptionOnErrorResponse)
-                {
-                    throw;
-                }
+                // Throw exception or return error.
+                if (input.ThrowExceptionOnErrorResponse) throw;
                 return new WriteResult()
                 {
                     Success = false,
@@ -262,7 +278,7 @@ namespace Frends.Community.Apache
         }
 
         /// <summary>
-        /// Get Parquet Datafields from task's JSON configuration
+        /// Get Parquet Datafields from task's JSON configuration.
         /// </summary>
         /// <param name="json">JSON configuration</param>
         /// <returns>List of datafields</returns>
@@ -272,18 +288,14 @@ namespace Frends.Community.Apache
 
             foreach (var element in json)
             {
-                string type = element.Value<string>("type");
+                var type = element.Value<string>("type");
 
-                bool nullable = false;
-                if (type.EndsWith("?"))
-                {
-                    nullable = true;
-                }
+                var nullable = false;
+                if (type.EndsWith("?")) nullable = true;
 
                 var field = new DataField(element.Value<string>("name"), DataTypes.GetDataType(type), nullable);
                 fields.Add(field);
             }
-
             return fields;
         }
     }

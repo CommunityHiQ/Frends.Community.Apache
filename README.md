@@ -70,19 +70,19 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 # Building
 
-Clone a copy of the repository
+Clone a copy of the repository.
 
 `git clone https://github.com/CommunityHiQ/Frends.Community.Apache.git`
 
-Rebuild the project
+Build the project.
 
 `dotnet build`
 
-Run tests
+Run tests.
 
 `dotnet test`
 
-Create a NuGet package
+Create a NuGet package.
 
 `dotnet pack --configuration Release`
 
@@ -101,5 +101,6 @@ NOTE: Be sure to merge the latest from "upstream" before making a pull request!
 
 | Version | Changes |
 | ------- | ------- |
-| 1.0.1 | Multitarget conversion and CI |
 | 1.0.0  | First version. Includes task ConvertCsvToParquet  |
+| 1.0.1 | Multitarget conversion and CI |
+| 1.0.2 | Fixed issue #2: Typos/errors are difficult to find in configuration |

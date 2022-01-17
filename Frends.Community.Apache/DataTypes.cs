@@ -8,106 +8,73 @@ namespace Frends.Community.Apache
     public static class DataTypes
     {
         /// <summary>
-        /// Return Parquet datatypes
+        /// Return Parquet datatypes.
         /// </summary>
         /// <param name="typeStr">Name of the data type</param>
         /// <returns>Parquet.Data.DataType</returns>
         public static DataType GetDataType(string typeStr)
         {
-            string jsonType = typeStr.TrimEnd(new char[] { '?' });
+            var jsonType = typeStr.TrimEnd(new char[] { '?' });
 
-            switch (jsonType.ToLower())
+            return jsonType.ToLower() switch
             {
-                case "boolean":
-                    return DataType.Boolean;
-                case "datetime":
-                case "datetimeoffset":
-                    return DataType.DateTimeOffset;
-                case "decimal":
-                    return DataType.Decimal;
-                case "double":
-                    return DataType.Double;
-                case "float":
-                    return DataType.Float;
-                case "int16":
-                    return DataType.Int16;
-                case "int":
-                case "int32":
-                    return DataType.Int32;
-                case "int64":
-                    return DataType.Int64;
-                //case "int96":
-                // this is for datetimes. Use datetimeoffset
-                case "string":
-                    return DataType.String;
-                case "unspecified":
-                    return DataType.Unspecified;
-                default:
-                    throw new ArgumentOutOfRangeException(jsonType);
-            }
+                "boolean" => DataType.Boolean,
+                "datetime" or "datetimeoffset" => DataType.DateTimeOffset,
+                "decimal" => DataType.Decimal,
+                "double" => DataType.Double,
+                "float" => DataType.Float,
+                "int16" => DataType.Int16,
+                "int" or "int32" => DataType.Int32,
+                "int64" => DataType.Int64,
+                // this is for datetimes.
+                // Use datetimeoffset.
+                "string" => DataType.String,
+                "unspecified" => DataType.Unspecified,
+                _ => throw new ArgumentOutOfRangeException(jsonType),
+            };
         }
 
         /// <summary>
-        /// Returns array of specific type
+        /// Returns array of specific type.
         /// </summary>
         /// <param name="field">Datatype</param>
         /// <param name="groupSize">Array size</param>
         /// <returns>Array</returns>
         public static object GetCSVColumnStorage(DataField field, long groupSize)
         {
-            DataType fieldType = field.DataType;
+            var fieldType = field.DataType;
 
             if (field.HasNulls)
             {
-                switch (fieldType)
+                return fieldType switch
                 {
-                    case DataType.Boolean:
-                        return new bool?[groupSize];
-                    case DataType.DateTimeOffset:
-                        return new DateTimeOffset?[groupSize];
-                    case DataType.Decimal:
-                        return new decimal?[groupSize];
-                    case DataType.Double:
-                        return new double?[groupSize];
-                    case DataType.Float:
-                        return new float?[groupSize];
-                    case DataType.Int16:
-                        return new short?[groupSize];
-                    case DataType.Int32:
-                        return new int?[groupSize];
-                    case DataType.Int64:
-                        return new long?[groupSize];
-                    case DataType.String:
-                        return new string[groupSize];
-                    default:
-                        throw new ArgumentOutOfRangeException(field.DataType.ToString());
-                }
+                    DataType.Boolean => new bool?[groupSize],
+                    DataType.DateTimeOffset => new DateTimeOffset?[groupSize],
+                    DataType.Decimal => new decimal?[groupSize],
+                    DataType.Double => new double?[groupSize],
+                    DataType.Float => new float?[groupSize],
+                    DataType.Int16 => new short?[groupSize],
+                    DataType.Int32 => new int?[groupSize],
+                    DataType.Int64 => new long?[groupSize],
+                    DataType.String => new string[groupSize],
+                    _ => throw new ArgumentOutOfRangeException(field.DataType.ToString()),
+                };
             }
             else
             {
-                switch (fieldType)
+                return fieldType switch
                 {
-                    case DataType.Boolean:
-                        return new bool[groupSize];
-                    case DataType.DateTimeOffset:
-                        return new DateTimeOffset[groupSize];
-                    case DataType.Decimal:
-                        return new decimal[groupSize];
-                    case DataType.Double:
-                        return new double[groupSize];
-                    case DataType.Float:
-                        return new float[groupSize];
-                    case DataType.Int16:
-                        return new short[groupSize];
-                    case DataType.Int32:
-                        return new int[groupSize];
-                    case DataType.Int64:
-                        return new long[groupSize];
-                    case DataType.String:
-                        return new string[groupSize];
-                    default:
-                        throw new ArgumentOutOfRangeException(field.DataType.ToString());
-                }
+                    DataType.Boolean => new bool[groupSize],
+                    DataType.DateTimeOffset => new DateTimeOffset[groupSize],
+                    DataType.Decimal => new decimal[groupSize],
+                    DataType.Double => new double[groupSize],
+                    DataType.Float => new float[groupSize],
+                    DataType.Int16 => new short[groupSize],
+                    DataType.Int32 => new int[groupSize],
+                    DataType.Int64 => new long[groupSize],
+                    DataType.String => new string[groupSize],
+                    _ => throw new ArgumentOutOfRangeException(field.DataType.ToString()),
+                };
             }
         }
     }
