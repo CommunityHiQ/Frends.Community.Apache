@@ -221,7 +221,7 @@ namespace Frends.Community.Apache
                                 // Write data if data structure is full.
                                 if (dataIndex >= parquetRowGroupSize)
                                 {
-                                    Writer.WriteGroup(csvColumns, dataIndex, parquetWriter, dataFields, config);
+                                    Writer.WriteGroup(csvColumns, parquetWriter, dataFields);
                                     dataIndex = 0;
                                 }
 
@@ -249,7 +249,7 @@ namespace Frends.Community.Apache
                                     csvColumns[i] = newArray;
                                 }
                             }
-                            Writer.WriteGroup(csvColumns, dataIndex, parquetWriter, dataFields, config);
+                            Writer.WriteGroup(csvColumns, parquetWriter, dataFields);
                         }
                     }
                 }

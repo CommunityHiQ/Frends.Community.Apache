@@ -14,11 +14,9 @@ namespace Frends.Community.Apache
         /// Writes dataLen rows and typed columns to the file.
         /// </summary>
         /// <param name="csvColumns">Processed CSV data</param>
-        /// <param name="dataLen">Row count</param>
         /// <param name="writer">ParquetWriter</param>
         /// <param name="fields">Field structure</param>
-        /// <param name="config">Config structure</param>
-        public static void WriteGroup(List<Object> csvColumns, long dataLen, ParquetWriter writer, List<DataField> fields, Config config)
+        public static void WriteGroup(List<Object> csvColumns, ParquetWriter writer, List<DataField> fields)
         {
             using var rg = writer.CreateRowGroup();
             for (var i = 0; i < fields.Count; i++)

@@ -104,3 +104,4 @@ NOTE: Be sure to merge the latest from "upstream" before making a pull request!
 | 1.0.0  | First version. Includes task ConvertCsvToParquet  |
 | 1.0.1 | Multitarget conversion and CI |
 | 1.0.2 | Fixed issue #2: Typos/errors are difficult to find in configuration |
+| 1.0.3 | Dependency update: CsvHelper 27.1.1 to 30.0.1, Newtonsoft.Json 13.0.1 to 13.0.2, Parquet.Net 3.9.0 to 3.10.0 |
