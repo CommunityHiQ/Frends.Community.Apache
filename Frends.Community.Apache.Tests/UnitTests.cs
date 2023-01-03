@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
 namespace Frends.Community.Apache.Tests
 {
     public class Tests
-    {
+    { 
         // File paths
         private static readonly string _basePath = Path.GetTempPath();
         private readonly string _inputCsvFileName = Path.Combine(_basePath, "testi-csv-" + Path.GetRandomFileName());
