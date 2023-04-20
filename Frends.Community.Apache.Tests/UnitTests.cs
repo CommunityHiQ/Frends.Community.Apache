@@ -489,6 +489,51 @@ namespace Frends.Community.Apache.Tests
             }
         }
 
+        /// <summary>
+        /// Test case for selecting timezone for datetime.
+        /// </summary>
+        [Test]
+        public void WriteParquetFileDatetime()
+        {
+            TestTools.RemoveOutputFile(_outputFileName);
+
+            var options = new WriteCSVOptions()
+            {
+                CsvDelimiter = ";",
+                FileEncoding = FileEncoding.UTF8,
+                EnableBom = false,
+                EncodingInString = ""
+            };
+
+            var poptions = new WriteParquetOptions()
+            {
+                ParquetRowGroupSize = 5000,
+                ParquetCompressionMethod = CompressionType.Gzip,
+                Timezone = Timezone.FLEStandardTime
+            };
+
+            var input = new WriteInput()
+            {
+                CsvFileName = _inputCsvFileName,
+                OuputFileName = _outputFileName,
+                ThrowExceptionOnErrorResponse = true,
+                Schema = _commonSchema
+            };
+
+            ApacheTasks.ConvertCsvToParquet(input, options, poptions, new CancellationToken());
+
+            var hash = TestTools.MD5Hash(_outputFileName);
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                var errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '045c6a617a1d37e0a1b464ccdeea2979'";
+                Assert.IsTrue(hash == "045c6a617a1d37e0a1b464ccdeea2979", errMessage);
+            }
+            else
+            {
+                var errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '3d6f72d1664b6a4040d2f12457264060'";
+                Assert.IsTrue(hash == "3d6f72d1664b6a4040d2f12457264060", errMessage);
+            }
+        }
 
         /// <summary>
         /// Simple csv -> parquet test case with large group size.
