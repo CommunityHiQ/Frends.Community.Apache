@@ -54,6 +54,8 @@ Note: Decimals, floats and doubles have "fi-FI" default culture. Decimal separat
 | Parquet row group size | number | Parquet files row group size. Batch size should be large enough because of perfomance later. | 5000 |
 | Parquet compression method | Enum | Parquet's compression level. GZip (smallest filesize) / Snappy / None | Gzip |
 | Count rows before processing | bool | Count CSV file rows before processing. If row count if smaller than Parquet row group size, decrease group size. Because this operation reads CSV file before processing, CSV file is processed two times. | false |
+| Timezone | Enum | Set timezone for datetime value. GTMStandardTime / CentralEuropeStandardTime / FLEStandardTime / Other | GTMStandardTime |
+| Other Timezone | string | Set timezone other value. | Greenwich Standard Time |
 
 ### Returns
 
