@@ -152,7 +152,37 @@ namespace Frends.Community.Apache
                                                 ((bool?[])csvColumns[i])[dataIndex] = Writer.GetBooleanValueNullable(csv.GetField(i));
                                                 break;
                                             case DataType.DateTimeOffset:
-                                                ((DateTimeOffset?[])csvColumns[i])[dataIndex] = Writer.GetDateTimeOffsetValueNullable(csv.GetField(i), config.GetConfigValue(dataFields[i].Name));
+                                                var date = Writer.GetDateTimeOffsetValueNullable(csv.GetField(i), config.GetConfigValue(dataFields[i].Name));
+                                                if (date == null) ((DateTimeOffset?[])csvColumns[i])[dataIndex] = date;
+                                                else
+                                                {
+                                                    string timezone = "";
+
+                                                    switch (parquetOptions.Timezone)
+                                                    {
+                                                        case Timezone.FLEStandardTime:
+                                                            timezone = "FLE Standard Time";
+                                                            break;
+                                                        case Timezone.CentralEuropeStandardTime:
+                                                            timezone = "Central Europe Standard Time";
+                                                            break;
+                                                        case Timezone.Other:
+                                                            if (string.IsNullOrEmpty(parquetOptions.OtherTimezone))
+                                                            {
+                                                                timezone = "GMT Standard Time";
+                                                            }
+                                                            else
+                                                            {
+                                                                timezone = parquetOptions.OtherTimezone;
+                                                            }
+                                                            break;
+                                                        default:
+                                                            timezone = "GMT Standard Time";
+                                                            break;
+                                                    }
+                                                    TimeZoneInfo cetInfo = TimeZoneInfo.FindSystemTimeZoneById(timezone);
+                                                    ((DateTimeOffset?[])csvColumns[i])[dataIndex] = TimeZoneInfo.ConvertTime((DateTimeOffset)date, cetInfo);
+                                                }
                                                 break;
                                             case DataType.Decimal:
                                                 ((decimal?[])csvColumns[i])[dataIndex] = Writer.GetDecimalValueNullable(csv.GetField(i), config.GetConfigValue(dataFields[i].Name));
@@ -187,7 +217,34 @@ namespace Frends.Community.Apache
                                                 ((bool[])csvColumns[i])[dataIndex] = Writer.GetBooleanValue(csv.GetField(i));
                                                 break;
                                             case DataType.DateTimeOffset:
-                                                ((DateTimeOffset[])csvColumns[i])[dataIndex] = Writer.GetDateTimeOffsetValue(csv.GetField(i), config.GetConfigValue(dataFields[i].Name));
+                                                string timezone = "";
+
+                                                switch (parquetOptions.Timezone)
+                                                {
+                                                    case Timezone.FLEStandardTime:
+                                                        timezone = "FLE Standard Time";
+                                                        break;
+                                                    case Timezone.CentralEuropeStandardTime:
+                                                        timezone = "Central Europe Standard Time";
+                                                        break;
+                                                    case Timezone.Other:
+                                                        if (string.IsNullOrEmpty(parquetOptions.OtherTimezone))
+                                                        {
+                                                            timezone = "GMT Standard Time";
+                                                        }
+                                                        else
+                                                        {
+                                                            timezone = parquetOptions.OtherTimezone;
+                                                        }
+                                                        break;
+                                                    default:
+                                                        timezone = "GMT Standard Time";
+                                                        break;
+                                                }
+                                                TimeZoneInfo cetInfo = TimeZoneInfo.FindSystemTimeZoneById(timezone);
+
+                                                var date = Writer.GetDateTimeOffsetValue(csv.GetField(i), config.GetConfigValue(dataFields[i].Name));
+                                                ((DateTimeOffset[])csvColumns[i])[dataIndex] = TimeZoneInfo.ConvertTime((DateTimeOffset)date, cetInfo);
                                                 break;
                                             case DataType.Decimal:
                                                 ((decimal[])csvColumns[i])[dataIndex] = decimal.Parse(csv.GetField(i), Writer.GetCultureInfo(config.GetConfigValue(dataFields[i].Name)));

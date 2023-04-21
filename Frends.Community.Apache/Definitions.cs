@@ -46,6 +46,8 @@ namespace Frends.Community.Apache
 
     public enum CompressionType { Gzip, Snappy, None }
 
+    public enum Timezone { GMTStandardTime, CentralEuropeStandardTime, FLEStandardTime, Other }
+
     public class WriteParquetOptions
     {
         /// <summary>
@@ -66,6 +68,18 @@ namespace Frends.Community.Apache
         /// </summary>
         [DefaultValue(false)]
         public bool CountRowsBeforeProcessing { get; set; } = false;
+
+        /// <summary>
+        /// Timezone for datetime values.
+        /// </summary>
+        [DefaultValue(Timezone.GMTStandardTime)]
+        public Timezone Timezone { get; set; } = Timezone.GMTStandardTime;
+
+        /// <summary>
+        /// Timezone for other timezone value. Full list on: https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/default-time-zones?view=windows-11
+        /// </summary>
+        [UIHint(nameof(Timezone), "", Timezone.Other)]
+        public string OtherTimezone { get; set; }
     }
 
     public class WriteCSVOptions

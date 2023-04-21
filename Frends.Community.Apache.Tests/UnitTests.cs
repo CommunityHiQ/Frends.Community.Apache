@@ -125,12 +125,12 @@ namespace Frends.Community.Apache.Tests
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 var errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '045c6a617a1d37e0a1b464ccdeea2979'";
-                Assert.IsTrue(hash == "045c6a617a1d37e0a1b464ccdeea2979", errMessage);
+                Assert.AreEqual(hash, "045c6a617a1d37e0a1b464ccdeea2979", errMessage);
             }
             else
             {
                 var errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '3d6f72d1664b6a4040d2f12457264060'";
-                Assert.IsTrue(hash == "3d6f72d1664b6a4040d2f12457264060", errMessage);
+                Assert.AreEqual(hash, "3d6f72d1664b6a4040d2f12457264060", errMessage);
             }
         }
 
@@ -217,12 +217,12 @@ namespace Frends.Community.Apache.Tests
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 var errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '6c80e7c86c8adf39b8544f7bc90724c8'";
-                Assert.IsTrue(hash == "6c80e7c86c8adf39b8544f7bc90724c8", errMessage);
+                Assert.AreEqual(hash, "6c80e7c86c8adf39b8544f7bc90724c8", errMessage);
             }
             else
             {
                 var errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: 'd5dcfc43ecd64da5f5013dab3095b777'";
-                Assert.IsTrue(hash == "d5dcfc43ecd64da5f5013dab3095b777", errMessage);
+                Assert.AreEqual(hash, "d5dcfc43ecd64da5f5013dab3095b777", errMessage);
             }
         }
 
@@ -263,12 +263,12 @@ namespace Frends.Community.Apache.Tests
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 var errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '86692194196efecc823d48384bd2a5a5'";
-                Assert.IsTrue(hash == "86692194196efecc823d48384bd2a5a5", errMessage);
+                Assert.AreEqual(hash, "86692194196efecc823d48384bd2a5a5", errMessage);
             }
             else
             {
                 var errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '94e1bfe7bf71d94d5bd52f2de2af658b'";
-                Assert.IsTrue(hash == "94e1bfe7bf71d94d5bd52f2de2af658b", errMessage);
+                Assert.AreEqual(hash, "94e1bfe7bf71d94d5bd52f2de2af658b", errMessage);
             }
         }
 
@@ -480,15 +480,60 @@ namespace Frends.Community.Apache.Tests
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 var errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '045c6a617a1d37e0a1b464ccdeea2979'";
-                Assert.IsTrue(hash == "045c6a617a1d37e0a1b464ccdeea2979", errMessage);
+                Assert.AreEqual(hash, "045c6a617a1d37e0a1b464ccdeea2979", errMessage);
             }
             else
             {
                 var errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '3d6f72d1664b6a4040d2f12457264060'";
-                Assert.IsTrue(hash == "3d6f72d1664b6a4040d2f12457264060", errMessage);
+                Assert.AreEqual(hash, "3d6f72d1664b6a4040d2f12457264060", errMessage);
             }
         }
 
+        /// <summary>
+        /// Test case for selecting timezone for datetime.
+        /// </summary>
+        [Test]
+        public void WriteParquetFileDatetime()
+        {
+            TestTools.RemoveOutputFile(_outputFileName);
+
+            var options = new WriteCSVOptions()
+            {
+                CsvDelimiter = ";",
+                FileEncoding = FileEncoding.UTF8,
+                EnableBom = false,
+                EncodingInString = ""
+            };
+
+            var poptions = new WriteParquetOptions()
+            {
+                ParquetRowGroupSize = 5000,
+                ParquetCompressionMethod = CompressionType.Gzip,
+                Timezone = Timezone.FLEStandardTime
+            };
+
+            var input = new WriteInput()
+            {
+                CsvFileName = _inputCsvFileName,
+                OuputFileName = _outputFileName,
+                ThrowExceptionOnErrorResponse = true,
+                Schema = _commonSchema
+            };
+
+            ApacheTasks.ConvertCsvToParquet(input, options, poptions, new CancellationToken());
+
+            var hash = TestTools.MD5Hash(_outputFileName);
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                var errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '045c6a617a1d37e0a1b464ccdeea2979'";
+                Assert.AreEqual(hash, "045c6a617a1d37e0a1b464ccdeea2979", errMessage);
+            }
+            else
+            {
+                var errMessage = $"File checksum doesn't match. Generated checksum: '{hash}' differs the expected checksum: '3d6f72d1664b6a4040d2f12457264060'";
+                Assert.AreEqual(hash, "3d6f72d1664b6a4040d2f12457264060", errMessage);
+            }
+        }
 
         /// <summary>
         /// Simple csv -> parquet test case with large group size.
@@ -528,12 +573,12 @@ namespace Frends.Community.Apache.Tests
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 var errMessage = $"File checksum didn't match. Generated checksum: '{hash}' differs the expected checksum: '936a383c5b5f5665114f48c804f52bd3'";
-                Assert.IsTrue(hash == "936a383c5b5f5665114f48c804f52bd3", errMessage);
+                Assert.AreEqual(hash, "936a383c5b5f5665114f48c804f52bd3", errMessage);
             }
             else
             {
                 var errMessage = $"File checksum didn't match. Generated checksum: '{hash}' differs the expected checksum: 'd214884cf6a6596cbc69a174bdd60805'";
-                Assert.IsTrue(hash == "d214884cf6a6596cbc69a174bdd60805", errMessage);
+                Assert.AreEqual(hash, "d214884cf6a6596cbc69a174bdd60805", errMessage);
             }
         }
 

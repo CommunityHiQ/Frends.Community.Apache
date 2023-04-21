@@ -54,6 +54,8 @@ Note: Decimals, floats and doubles have "fi-FI" default culture. Decimal separat
 | Parquet row group size | number | Parquet files row group size. Batch size should be large enough because of perfomance later. | 5000 |
 | Parquet compression method | Enum | Parquet's compression level. GZip (smallest filesize) / Snappy / None | Gzip |
 | Count rows before processing | bool | Count CSV file rows before processing. If row count if smaller than Parquet row group size, decrease group size. Because this operation reads CSV file before processing, CSV file is processed two times. | false |
+| Timezone | Enum | Set timezone for datetime value. GTMStandardTime / CentralEuropeStandardTime / FLEStandardTime / Other | GTMStandardTime |
+| Other Timezone | string | Set timezone other value. | Greenwich Standard Time |
 
 ### Returns
 
@@ -105,3 +107,4 @@ NOTE: Be sure to merge the latest from "upstream" before making a pull request!
 | 1.0.1 | Multitarget conversion and CI |
 | 1.0.2 | Fixed issue #2: Typos/errors are difficult to find in configuration |
 | 1.0.3 | Dependency update: CsvHelper 27.1.1 to 30.0.1, Parquet.Net 3.9.0 to 3.10.0 |
+| 1.1.0 | Option for setting timezone for datetime values |
