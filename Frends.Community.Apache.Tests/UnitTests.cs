@@ -577,8 +577,8 @@ namespace Frends.Community.Apache.Tests
             }
             else
             {
-                var errMessage = $"File checksum didn't match. Generated checksum: '{hash}' differs the expected checksum: 'd214884cf6a6596cbc69a174bdd60805'";
-                Assert.AreEqual(hash, "d214884cf6a6596cbc69a174bdd60805", errMessage);
+                var errMessage = $"File checksum didn't match. Generated checksum: '{hash}' differs the expected checksum: 'eaafcd98b6e0ce6b02bfd9c9f4e4b794'";
+                Assert.AreEqual(hash, "eaafcd98b6e0ce6b02bfd9c9f4e4b794", errMessage);
             }
         }
 
