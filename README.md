@@ -108,3 +108,5 @@ NOTE: Be sure to merge the latest from "upstream" before making a pull request!
 | 1.0.2 | Fixed issue #2: Typos/errors are difficult to find in configuration |
 | 1.0.3 | Dependency update: CsvHelper 27.1.1 to 30.0.1, Parquet.Net 3.9.0 to 3.10.0 |
 | 1.1.0 | Option for setting timezone for datetime values |
+| 1.2.0 | Added target frameworks net6 & net8. Updated dependency CsvHelper to 33.0.1. Changed test framework from netcoreapp3.0 to net6. |
+
